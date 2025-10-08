@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BukuKita - Temukan Buku Impian Anda</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>📚 BukuKita</h1>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" data-page="home">🏠 Beranda</button>
+                <button class="nav-btn" data-page="search">🔍 Pencarian</button>
+                <button class="nav-btn" data-page="categories">📚 Kategori</button>
+                <button class="nav-btn" id="favoritesToggle">
+                    ❤️ Favorit (<span id="favoritesCount">0</span>)
+                </button>
+            </div>
+        </nav>
+
+        <!-- Home Page -->
+        <div class="page active" id="homePage">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2>Selamat Datang di Buku Kita</h2>
+                    <p>Temukan jutaan buku dari seluruh dunia dalam satu tempat yang hangat dan nyaman</p>
+                    <div class="hero-search">
+                        <input 
+                            type="text" 
+                            class="hero-search-input" 
+                            id="heroSearchInput" 
+                            placeholder="Cari buku impian Anda..."
+                        >
+                        <button class="hero-search-btn" onclick="bookFinder.searchFromHero()">
+                            🔍 Cari
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Categories -->
+            <div class="categories-section">
+                <h3>Kategori Populer</h3>
+                <div class="categories-grid">
+                    <div class="category-card" data-category="fiction">
+                        <div class="category-icon">📖</div>
+                        <h4>Fiksi</h4>
+                        <p>Novel, cerita pendek, dan karya fiksi lainnya</p>
+                    </div>
+                    <div class="category-card" data-category="science">
+                        <div class="category-icon">🔬</div>
+                        <h4>Sains</h4>
+                        <p>Buku sains, teknologi, dan penelitian</p>
+                    </div>
+                    <div class="category-card" data-category="history">
+                        <div class="category-icon">🏛️</div>
+                        <h4>Sejarah</h4>
+                        <p>Sejarah dunia, biografi, dan dokumentasi</p>
+                    </div>
+                    <div class="category-card" data-category="self-help">
+                        <div class="category-icon">💪</div>
+                        <h4>Pengembangan Diri</h4>
+                        <p>Motivasi, produktivitas, dan self-help</p>
+                    </div>
+                    <div class="category-card" data-category="business">
+                        <div class="category-icon">💼</div>
+                        <h4>Bisnis</h4>
+                        <p>Manajemen, keuangan, dan entrepreneurship</p>
+                    </div>
+                    <div class="category-card" data-category="children">
+                        <div class="category-icon">👶</div>
+                        <h4>Anak-anak</h4>
+                        <p>Buku cerita dan edukasi untuk anak</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Books Carousel -->
+            <div class="popular-section">
+                <h3>Buku Populer Hari Ini</h3>
+                <div class="books-carousel" id="popularBooksCarousel">
+                    <div class="carousel-container" id="carouselContainer">
+                        <!-- Popular books will be loaded here -->
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" id="prevBtn">❮</button>
+                        <button class="carousel-btn" id="nextBtn">❯</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Searches -->
+            <div class="recent-section">
+                <h3>Pencarian Terbaru</h3>
+                <div class="recent-searches" id="recentSearches">
+                    <div class="no-recent">
+                        <p>Belum ada pencarian terbaru. Mulai cari buku favorit Anda!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Page -->
+        <div class="page" id="searchPage">
+            <div class="header">
+                <h2>🔍 Pencarian Buku</h2>
+                <p>Temukan buku yang Anda cari dengan mudah</p>
+            </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Cari buku berdasarkan judul, penulis, atau kata kunci..."
+                    autocomplete="off"
+                >
+                <button class="search-btn" id="searchBtn">
+                    🔍 Cari
+                </button>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="clear-btn" id="clearBtn" style="display: none;">
+                    ✖️ Hapus Hasil
+                </button>
+                <button class="filter-toggle-btn" id="filterToggle" style="display: none;">
+                    🔧 Filter & Urutkan
+                </button>
+                <button class="filter-toggle-btn" id="favoritesToggle">
+                    ❤️ Favorit (<span id="favoritesCount">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section" id="filterSection">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="languageFilter">Bahasa:</label>
+                    <select class="filter-select" id="languageFilter">
+                        <option value="all">Semua Bahasa</option>
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFilter">Tahun Terbit:</label>
+                    <select class="filter-select" id="dateFilter">
+                        <option value="all">Semua Tahun</option>
+                        <option value="last5years">5 Tahun Terakhir</option>
+                        <option value="last10years">10 Tahun Terakhir</option>
+                        <option value="last20years">20 Tahun Terakhir</option>
+                        <option value="older">Lebih dari 20 Tahun</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="ratingFilter">Rating Minimal:</label>
+                    <select class="filter-select" id="ratingFilter">
+                        <option value="0">Semua Rating</option>
+                        <option value="1">1+ Bintang</option>
+                        <option value="2">2+ Bintang</option>
+                        <option value="3">3+ Bintang</option>
+                        <option value="4">4+ Bintang</option>
+                        <option value="4.5">4.5+ Bintang</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Mencari buku untuk Anda...</div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <div class="results-header">
+                <h2>Hasil Pencarian</h2>
+                <div class="results-count" id="resultsCount"></div>
+                <div class="results-controls">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">⊞ Grid</button>
+                        <button class="view-btn" data-view="list">☰ List</button>
+                    </div>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="relevance">Urutan Relevan</option>
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="rating">Rating Tertinggi</option>
+                        <option value="title">A-Z Judul</option>
+                    </select>
+                </div>
+            </div>
+            <div class="books-grid active" id="booksGrid"></div>
+            <div class="books-list" id="booksList"></div>
+        </div>
+
+            <div class="no-results" id="noResults" style="display: none;">
+                <div class="no-results-icon">📖</div>
+                <h3>Buku tidak ditemukan</h3>
+                <p>Coba gunakan kata kunci yang berbeda atau lebih spesifik</p>
+            </div>
+        </div>
+
+        <!-- Categories Page -->
+        <div class="page" id="categoriesPage">
+            <div class="header">
+                <h2>📚 Kategori Buku</h2>
+                <p>Jelajahi buku berdasarkan kategori dan genre</p>
+            </div>
+
+            <div class="categories-page">
+                <div class="category-filters">
+                    <button class="category-filter-btn active" data-category="all">Semua</button>
+                    <button class="category-filter-btn" data-category="fiction">Fiksi</button>
+                    <button class="category-filter-btn" data-category="non-fiction">Non-Fiksi</button>
+                    <button class="category-filter-btn" data-category="science">Sains</button>
+                    <button class="category-filter-btn" data-category="history">Sejarah</button>
+                    <button class="category-filter-btn" data-category="business">Bisnis</button>
+                    <button class="category-filter-btn" data-category="self-help">Self-Help</button>
+                    <button class="category-filter-btn" data-category="children">Anak-anak</button>
+                </div>
+
+                <div class="categories-grid-detailed">
+                    <div class="detailed-category-card" data-category="fiction">
+                        <div class="category-header">
+                            <div class="category-icon-large">📖</div>
+                            <div class="category-info">
+                                <h3>Fiksi</h3>
+                                <p>Novel, cerita pendek, dan karya fiksi lainnya</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Fantasi</span>
+                            <span class="subcategory">Romance</span>
+                            <span class="subcategory">Thriller</span>
+                            <span class="subcategory">Mystery</span>
+                            <span class="subcategory">Sci-Fi</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('fiction')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+
+                    <div class="detailed-category-card" data-category="science">
+                        <div class="category-header">
+                            <div class="category-icon-large">🔬</div>
+                            <div class="category-info">
+                                <h3>Sains</h3>
+                                <p>Buku sains, teknologi, dan penelitian</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Fisika</span>
+                            <span class="subcategory">Kimia</span>
+                            <span class="subcategory">Biologi</span>
+                            <span class="subcategory">Matematika</span>
+                            <span class="subcategory">Teknologi</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('science')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+
+                    <div class="detailed-category-card" data-category="history">
+                        <div class="category-header">
+                            <div class="category-icon-large">🏛️</div>
+                            <div class="category-info">
+                                <h3>Sejarah</h3>
+                                <p>Sejarah dunia, biografi, dan dokumentasi</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Sejarah Dunia</span>
+                            <span class="subcategory">Biografi</span>
+                            <span class="subcategory">Sejarah Indonesia</span>
+                            <span class="subcategory">Perang Dunia</span>
+                            <span class="subcategory">Arkeologi</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('history')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+
+                    <div class="detailed-category-card" data-category="self-help">
+                        <div class="category-header">
+                            <div class="category-icon-large">💪</div>
+                            <div class="category-info">
+                                <h3>Pengembangan Diri</h3>
+                                <p>Motivasi, produktivitas, dan self-help</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Motivasi</span>
+                            <span class="subcategory">Produktivitas</span>
+                            <span class="subcategory">Mindset</span>
+                            <span class="subcategory">Habit</span>
+                            <span class="subcategory">Leadership</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('self-help')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+
+                    <div class="detailed-category-card" data-category="business">
+                        <div class="category-header">
+                            <div class="category-icon-large">💼</div>
+                            <div class="category-info">
+                                <h3>Bisnis</h3>
+                                <p>Manajemen, keuangan, dan entrepreneurship</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Startup</span>
+                            <span class="subcategory">Marketing</span>
+                            <span class="subcategory">Keuangan</span>
+                            <span class="subcategory">Manajemen</span>
+                            <span class="subcategory">Investasi</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('business')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+
+                    <div class="detailed-category-card" data-category="children">
+                        <div class="category-header">
+                            <div class="category-icon-large">👶</div>
+                            <div class="category-info">
+                                <h3>Anak-anak</h3>
+                                <p>Buku cerita dan edukasi untuk anak</p>
+                            </div>
+                        </div>
+                        <div class="category-subcategories">
+                            <span class="subcategory">Cerita</span>
+                            <span class="subcategory">Edukasi</span>
+                            <span class="subcategory">Gambar</span>
+                            <span class="subcategory">Fabel</span>
+                            <span class="subcategory">Komik</span>
+                        </div>
+                        <button class="explore-category-btn" onclick="bookFinder.exploreCategory('children')">
+                            Jelajahi Kategori
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Sidebar -->
+    <div class="overlay" id="overlay"></div>
+        <div class="favorites-sidebar" id="favoritesSidebar">
+            <div class="favorites-header">
+                <h3>📚 Buku Favorit Kita</h3>
+                <button class="close-btn" id="closeFavorites">✖️</button>
+            </div>
+        <div class="favorites-content" id="favoritesContent">
+            <!-- Favorites will be populated here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
